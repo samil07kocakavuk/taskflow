@@ -1,11 +1,11 @@
 # TaskFlow
 
-TaskFlow, kendi günlük işlerimi ve okul projelerimi takip ettiğim küçük bir görev
-API'si. Node.js ve Express kullandım, verileri JSON dosyasında tutuyorum.
-Veritabanı kurmak istemedim.
+TaskFlow, günlük işleri ve okul projelerini takip etmek için geliştirilmiş küçük
+bir görev API'sidir. Node.js ve Express kullanılmıştır; veriler JSON dosyasında
+tutulmaktadır. Bu boyuttaki proje için veritabanı tercih edilmemiştir.
 
-Giriş için session + çerez kullanıyorum. Görev ve rapor uçlarına erişmek için önce
-giriş yapmak gerekiyor.
+Giriş için session + çerez kullanılır. Görev ve rapor uçlarına erişmek için önce
+giriş yapılması gerekir.
 
 ## Neler var
 
@@ -28,7 +28,7 @@ cd taskflow
 npm install
 ```
 
-Ayarları `.env` dosyasından okumak istersen örneği kopyala:
+Ayarları `.env` dosyasından okumak için örneği kopyalayın:
 
 ```bash
 # PowerShell
@@ -44,14 +44,15 @@ git'e eklenmiyor.
 npm start
 ```
 
-Sunucu `http://localhost:3000` adresinde açılır. Port değiştirmek istersen:
+Sunucu `http://localhost:3000` adresinde açılır. Port değiştirmek için:
 
 ```bash
 # PowerShell
 $env:PORT=4000; npm start
 ```
 
-Geliştirirken `npm run dev` kullanıyorum; dosya değişince sunucu kendini yeniliyor.
+Geliştirme sırasında `npm run dev` kullanılabilir; dosya değişince sunucu kendini
+yeniler.
 
 ## Giriş
 
@@ -64,7 +65,7 @@ curl -X POST http://localhost:3000/api/auth/login \
   -c cookie.txt
 ```
 
-Dönen `taskflow.sid` çerezini sonraki isteklerde göndermen gerekiyor:
+Dönen `taskflow.sid` çerezi sonraki isteklerde gönderilmelidir:
 
 ```bash
 curl http://localhost:3000/api/tasks -b cookie.txt
@@ -94,7 +95,7 @@ hashlenip `data/users.json` içinde tutuluyor, düz metin yok.
 | GET | `/api/reports/pending` | Bekleyenler |
 | GET | `/api/reports/summary` | Genel özet |
 
-Giriş gerektiren uçlar oturum yoksa `401` dönüyor.
+Giriş gerektiren uçlar oturum yoksa `401` döner.
 
 Listeleme şu parametreleri alıyor: `status`, `priority`, `assignee`, `project`,
 `keyword`, `sort`, `page`, `limit`. Örnek:
@@ -104,7 +105,7 @@ GET /api/tasks?status=todo&sort=-createdAt&page=1&limit=10
 ```
 
 `sort` için `createdAt`, `updatedAt`, `priority`, `title`, `dueDate`, `id`
-kullanılabilir. Azalan sıralama için başına `-` koyuyorum (`sort=-createdAt`).
+kullanılabilir. Azalan sıralama için başına `-` konur (`sort=-createdAt`).
 
 ## Örnek
 
@@ -143,7 +144,7 @@ test/                 api testleri
 
 ## Veri
 
-Görevler `data/tasks.json` içinde duruyor:
+Görevler `data/tasks.json` içinde tutulur:
 
 ```json
 {
@@ -153,8 +154,9 @@ Görevler `data/tasks.json` içinde duruyor:
 ```
 
 `nextId` sayesinde silinen bir görevin numarası yeni göreve tekrar verilmiyor.
-Dosyaya yazarken önce geçici dosyaya yazıp sonra üzerine taşıyorum, böylece aynı
-anda gelen isteklerde yarım dosya okunmuyor. Yazma işlemleri sıraya alınıyor.
+Dosyaya yazarken önce geçici dosyaya yazılır, sonra asıl dosyanın üzerine
+taşınır; böylece aynı anda gelen isteklerde yarım dosya okunmaz. Yazma işlemleri
+sıraya alınır.
 
 ## Test
 
@@ -162,15 +164,15 @@ anda gelen isteklerde yarım dosya okunmuyor. Yazma işlemleri sıraya alınıyo
 npm test
 ```
 
-Testler geçici dosyalarla çalışıyor, `data/` içindeki verilere dokunmuyor.
+Testler geçici dosyalarla çalışır ve `data/` içindeki verilere dokunmaz.
 
 ## Postman
 
-`postman/taskflow.postman_collection.json` dosyasını Postman'e import et.
-`baseUrl` değişkeni `http://localhost:3000` geliyor.
+`postman/taskflow.postman_collection.json` dosyası Postman'e import edilmelidir.
+`baseUrl` değişkeni `http://localhost:3000` olarak gelir.
 
-**Önce `0. Giriş` klasöründeki `Giriş Yap` isteğini çalıştır.** Postman çerezi
-kendisi saklıyor, sonraki istekler oturumlu gidiyor.
+**Önce `0. Giriş` klasöründeki `Giriş Yap` isteği çalıştırılmalıdır.** Postman
+çerezi kendisi saklar; sonraki istekler oturumlu gider.
 
 ## Ekran Görüntüleri
 
@@ -192,8 +194,8 @@ Postman'de giriş ve temel CRUD isteklerinin kanıtları:
 
 - Session'lar sunucu belleğinde; sunucu yeniden başlarsa tekrar giriş yapmak gerekir.
 - `SESSION_SECRET` ortam değişkeniyle değiştirilebilir.
-- Aynı anda birden fazla sunucu aynı dosyaya yazarsa kuyruk işe yaramaz. Tek
-  process için tasarladım.
+- Aynı anda birden fazla sunucu aynı dosyaya yazarsa kuyruk işe yaramaz. Proje
+  tek process için tasarlanmıştır.
 
 Dokümanlar: [tanıtım](docs/Proje-Tanitim-Dokumani.md) ·
 [veri modeli](docs/Veri-Modeli.md) · [API](docs/API-Dokumani.md) ·

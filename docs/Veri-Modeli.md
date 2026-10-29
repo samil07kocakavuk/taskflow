@@ -75,10 +75,10 @@
 }
 ```
 
-`nextId` bir sonraki kaydın numarasını tutuyor. Sadece en büyük ID'ye bakıp bir
-fazlasını verseydim, silinen kaydın numarası yenisine tekrar gelirdi. Onun için
-sayacı ayrı tutuyorum. Silinen bir ID'nin tekrar kullanılmaması bilinçli bir
-tercih; eski bağlantıların yanlış kayda işaret etmesini önlüyor.
+`nextId` bir sonraki kaydın numarasını tutar. Yalnızca en büyük ID'ye bakılıp
+bir fazlası verilseydi, silinen kaydın numarası yeni kayda tekrar gelirdi. Bu
+nedenle sayaç ayrı tutulur. Silinen bir ID'nin tekrar kullanılmaması bilinçli bir
+tercihtir; eski bağlantıların yanlış kayda işaret etmesini önler.
 
 `status`, `priority` ve `project` alanlarında `null` kabul edilmiyor. `description`
 ve `dueDate` alanları temizlemek için `null` gönderilebilir.

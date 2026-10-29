@@ -13,7 +13,7 @@ TaskFlow, günlük işleri ve okul projelerini tek yerden takip etmek için
 geliştirilmiş bir REST API. Node.js ve Express kullanıldı. Amaç, görevlerin
 oluşturulması, bir kişiye atanması, durum takibi ve önceliklendirilmesini
 sağlayan bir altyapı kurmak. Yönergedeki görev ve proje yönetim sistemi
-senaryosunu temel alıp kendi günlük kullanımıma göre uyarladım.
+senaryosu temel alınarak günlük kullanıma uyarlanmıştır.
 
 Projede görev yönetimi (CRUD), kullanıcı girişi (session), istek loglama,
 veri doğrulama, filtreleme/arama/sayfalama ve raporlama bulunuyor.
