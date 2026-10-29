@@ -11,13 +11,14 @@ const app = express();
 
 app.disable('x-powered-by');
 
+app.use(logger);
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 app.use(
   session({
-    name: 'gorev.sid',
+    name: 'taskflow.sid',
     secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -28,8 +29,6 @@ app.use(
     },
   })
 );
-
-app.use(logger);
 
 app.get('/', (req, res) => {
   res.json({

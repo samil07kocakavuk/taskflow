@@ -4,7 +4,7 @@ const app = require('./app');
 const config = require('./config');
 
 const server = app.listen(config.port, () => {
-  console.log(`gorev-api calisiyor -> http://localhost:${config.port}`);
+  console.log(`TaskFlow calisiyor -> http://localhost:${config.port}`);
   console.log(`log: ${config.logFile}`);
 });
 

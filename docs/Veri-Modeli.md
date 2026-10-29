@@ -12,7 +12,7 @@
 | `status` | metin | hayır | `todo`, `in-progress`, `completed`; varsayılan `todo` |
 | `priority` | metin | hayır | `low`, `medium`, `high`; varsayılan `medium` |
 | `assignee` | metin | evet | Görevin atandığı kişi, en fazla 50 karakter |
-| `project` | metin | hayır | Varsayılan `genel` |
+| `project` | metin | hayır | Varsayılan `genel`; boş gönderilirse `genel` olur |
 | `dueDate` | tarih | hayır | `YYYY-AA-GG`, boş bırakılabilir |
 | `createdAt` | tarih-saat | otomatik | Oluşturulma zamanı |
 | `updatedAt` | tarih-saat | otomatik | Son güncelleme |
@@ -77,7 +77,11 @@
 
 `nextId` bir sonraki kaydın numarasını tutuyor. Sadece en büyük ID'ye bakıp bir
 fazlasını verseydim, silinen kaydın numarası yenisine tekrar gelirdi. Onun için
-sayacı ayrı tutuyorum.
+sayacı ayrı tutuyorum. Silinen bir ID'nin tekrar kullanılmaması bilinçli bir
+tercih; eski bağlantıların yanlış kayda işaret etmesini önlüyor.
+
+`status`, `priority` ve `project` alanlarında `null` kabul edilmiyor. `description`
+ve `dueDate` alanları temizlemek için `null` gönderilebilir.
 
 Dosya yoksa ilk çalıştırmada oluşuyor. Her yazma işleminde önce `.tmp` dosyasına
 yazılıp sonra `rename` ile asıl dosyanın üzerine taşınıyor; yarım yazılmış dosya

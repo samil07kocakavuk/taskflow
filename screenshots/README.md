@@ -1,4 +1,4 @@
-# Ekran Görüntüleri
+# TaskFlow — Ekran Görüntüleri
 
 Postman'de önce `0. Giriş` klasöründeki **Giriş Yap** isteğini çalıştır, sonra
 aşağıdaki isteklerin ekran görüntülerini al.

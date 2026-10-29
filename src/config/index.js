@@ -11,9 +11,9 @@ module.exports = {
   logFile:
     process.env.LOG_FILE ||
     path.join(__dirname, '..', '..', 'logs', 'access.log'),
-  sessionSecret: process.env.SESSION_SECRET || 'gorev-api-dev-secret',
+  sessionSecret: process.env.SESSION_SECRET || 'taskflow-dev-secret',
   api: {
-    name: 'gorev-api',
+    name: 'TaskFlow',
     version: '1.0.0',
   },
 };

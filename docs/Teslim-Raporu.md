@@ -1,19 +1,19 @@
-# Teslim Raporu — görev-api
+# Teslim Raporu — TaskFlow
 
 **Öğrenci:** İsmail Şamil Kocakavuk
 **Ders:** Backend Geliştirme
 **Teslim Tarihi:** 19.10.2026
-**GitHub:** https://github.com/samil07kocakavuk/gorev-api
+**GitHub:** https://github.com/samil07kocakavuk/taskflow
 
 ---
 
 ## 1. Projenin Amacı
 
-`görev-api`, günlük işleri ve okul projelerini tek yerden takip etmek için
+TaskFlow, günlük işleri ve okul projelerini tek yerden takip etmek için
 geliştirilmiş bir REST API. Node.js ve Express kullanıldı. Amaç, görevlerin
 oluşturulması, bir kişiye atanması, durum takibi ve önceliklendirilmesini
 sağlayan bir altyapı kurmak. Yönergedeki görev ve proje yönetim sistemi
-senaryosunu temel alıp kendi kullanımıma göre uyarladım.
+senaryosunu temel alıp kendi günlük kullanımıma göre uyarladım.
 
 Projede görev yönetimi (CRUD), kullanıcı girişi (session), istek loglama,
 veri doğrulama, filtreleme/arama/sayfalama ve raporlama bulunuyor.
@@ -37,7 +37,8 @@ veri doğrulama, filtreleme/arama/sayfalama ve raporlama bulunuyor.
 - Kayıt, giriş, çıkış ve oturum bilgisi uçları
 - Session + çerez ile kimlik doğrulama; görev ve rapor uçları korumalı
 - Şifrelerin `scrypt` ile hashlenmesi
-- Her isteği konsola ve `logs/access.log` dosyasına yazan logger middleware
+- Bozuk JSON ve büyük gövde istekleri dahil her isteği konsola ve `logs/access.log`
+  dosyasına yazan logger middleware
 - Alan doğrulama: `title` ve `assignee` zorunlu; `priority`, `status`, `dueDate`,
   `project` için tip ve değer kontrolü
 - Durum, öncelik, kişi ve projeye göre filtreleme
@@ -45,7 +46,7 @@ veri doğrulama, filtreleme/arama/sayfalama ve raporlama bulunuyor.
 - Tamamlanan, bekleyen ve genel özet raporları
 - Merkezi hata yönetimi ve 404 yakalama
 - JSON dosyasına atomik yazma ve eşzamanlı yazma koruması
-- 25 otomatik test
+- 27 otomatik test
 
 ## 4. API Uçları
 
@@ -87,7 +88,7 @@ alınıyor ve önce geçici dosyaya yazılıp sonra asıl dosyanın üzerine ta�
 
 ```
 data/                 tasks.json, users.json
-docs/                 tanitim, veri modeli, API dokumani, bu rapor
+docs/                 tanitim, veri modeli, API dokumani, test senaryolari, bu rapor
 postman/              postman koleksiyonu
 src/config            ayarlar
 src/controllers       istek/cevap katmani
@@ -110,7 +111,7 @@ Sunucu: `http://localhost:3000`
 Hazır kullanıcı: **`samil` / `123456`**
 
 Giriş yapmadan görev uçları `401` döner. Önce `POST /api/auth/login` çağrılmalı,
-dönen `gorev.sid` çerezi sonraki isteklerde gönderilmeli. Postman koleksiyonu
+dönen `taskflow.sid` çerezi sonraki isteklerde gönderilmeli. Postman koleksiyonu
 bunu kendisi yapıyor.
 
 ## 8. Testler
@@ -121,20 +122,21 @@ bunu kendisi yapıyor.
 npm test
 ```
 
-Sonuç: **25 test, 25 başarılı, 0 hata.** Testler geçici dosyalarla çalışıyor,
+Sonuç: **27 test, 27 başarılı, 0 hata.** Testler geçici dosyalarla çalışıyor,
 `data/` içindeki verilere dokunmuyor. Kapsam: giriş/çıkış, CRUD, `PATCH`,
-doğrulama hataları, 404, arama, filtre, sayfalama, raporlar ve eşzamanlı yazma.
+doğrulama hataları, 404, arama, filtre, sayfalama, loglama, raporlar ve
+eşzamanlı yazma.
 
 ### Postman
 
-Koleksiyon: `postman/gorev-api.postman_collection.json`
+Koleksiyon: `postman/taskflow.postman_collection.json`
 
 Sonuç: **24 istek, 0 hata.** Koleksiyon sırasıyla kayıt, giriş, görev CRUD,
 filtre/arama/sayfalama, raporlar, hatalı istekler ve çıkış adımlarını içeriyor.
 
 ### Ekran Görüntüleri
 
-Aşağıdaki görüntüler `screenshots/` klasörüne eklenecek.
+Aşağıdaki görüntüler `screenshots/` klasörüne eklendi.
 
 | # | İstek | Beklenen |
 |---|---|---|
@@ -162,9 +164,9 @@ Aşağıdaki görüntüler `screenshots/` klasörüne eklenecek.
 | Routing yapısı | `src/routes/` (index, taskRoutes, reportRoutes, authRoutes) |
 | Logger middleware | `src/middleware/logger.js` |
 | Kod kalitesi | Katmanlı yapı: routes → controllers → services → utils |
-| Dokümantasyon | `README.md`, `docs/Proje-Tanitim-Dokumani.md`, `docs/Veri-Modeli.md`, `docs/API-Dokumani.md` |
-| Postman testleri | `postman/gorev-api.postman_collection.json`, `screenshots/` |
-| Public GitHub reposu | https://github.com/samil07kocakavuk/gorev-api |
+| Dokümantasyon | `README.md`, `docs/Proje-Tanitim-Dokumani.md`, `docs/Veri-Modeli.md`, `docs/API-Dokumani.md`, `docs/Test-Senaryolari.md` |
+| Postman testleri | `postman/taskflow.postman_collection.json`, `screenshots/` |
+| Public GitHub reposu | https://github.com/samil07kocakavuk/taskflow |
 
 ## 10. Teslim Edilen Dosyalar
 
@@ -173,8 +175,9 @@ Aşağıdaki görüntüler `screenshots/` klasörüne eklenecek.
 - `docs/Proje-Tanitim-Dokumani.md` — proje tanıtımı
 - `docs/Veri-Modeli.md` — veri modeli
 - `docs/API-Dokumani.md` — request/response örnekli API dokümanı
+- `docs/Test-Senaryolari.md` — yazılı test senaryoları
 - `docs/Teslim-Raporu.md` — bu rapor
-- `postman/gorev-api.postman_collection.json` — Postman koleksiyonu
+- `postman/taskflow.postman_collection.json` — Postman koleksiyonu
 - `screenshots/` — Postman ekran görüntüleri
 - `test/api.test.js` — otomatik testler
 

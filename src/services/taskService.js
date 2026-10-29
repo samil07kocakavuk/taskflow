@@ -108,9 +108,7 @@ async function list(query = {}) {
 
   const page = Number.isInteger(pageInput) && pageInput > 0 ? pageInput : 1;
   const limit =
-    Number.isInteger(limitInput) && limitInput > 0
-      ? Math.min(limitInput, 100)
-      : total || 10;
+    Number.isInteger(limitInput) && limitInput > 0 ? Math.min(limitInput, 100) : 10;
 
   const start = (page - 1) * limit;
 
@@ -192,6 +190,9 @@ async function update(id, payload) {
 
       if (field === 'dueDate') {
         changes.dueDate = value ? String(value).trim() : null;
+      } else if (field === 'project') {
+        const text = typeof value === 'string' ? value.trim() : '';
+        changes.project = text || 'genel';
       } else if (value === null) {
         changes[field] = '';
       } else {

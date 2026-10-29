@@ -23,13 +23,13 @@ function check(field, value, errors, required = false) {
       break;
 
     case 'priority':
-      if (value !== undefined && value !== null && !ALLOWED_PRIORITY.includes(value)) {
+      if (value !== undefined && (value === null || !ALLOWED_PRIORITY.includes(value))) {
         errors.push('priority low, medium veya high olmali');
       }
       break;
 
     case 'status':
-      if (value !== undefined && value !== null && !ALLOWED_STATUS.includes(value)) {
+      if (value !== undefined && (value === null || !ALLOWED_STATUS.includes(value))) {
         errors.push(`status ${ALLOWED_STATUS.join(', ')} degerlerinden biri olmali`);
       }
       break;
@@ -45,8 +45,8 @@ function check(field, value, errors, required = false) {
       break;
 
     case 'project':
-      if (value === undefined || value === null || value === '') break;
-      if (typeof value !== 'string') errors.push('project metin olmali');
+      if (value === undefined || value === '') break;
+      if (value === null || typeof value !== 'string') errors.push('project metin olmali');
       else if (value.trim().length > 100) errors.push('project en fazla 100 karakter');
       break;
 

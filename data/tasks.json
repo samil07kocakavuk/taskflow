@@ -52,7 +52,7 @@
     {
       "id": 5,
       "title": "Portfolyoya proje ekle",
-      "description": "gorev-api reposunu siteye ekle, ekran goruntusu koy.",
+      "description": "TaskFlow reposunu siteye ekle, ekran goruntusu koy.",
       "status": "todo",
       "priority": "low",
       "assignee": "samil",

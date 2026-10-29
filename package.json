@@ -1,7 +1,7 @@
 {
-  "name": "gorev-api",
+  "name": "taskflow",
   "version": "1.0.0",
-  "description": "Kucuk bir gorev takip API'si. Node.js + Express.",
+  "description": "TaskFlow - gunluk gorev takip API'si. Node.js + Express.",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

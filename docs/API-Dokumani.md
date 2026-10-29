@@ -1,4 +1,4 @@
-# API Dokümanı
+# TaskFlow API Dokümanı
 
 Adres: `http://localhost:3000`
 Gönderilen ve dönen her şey JSON.
@@ -6,7 +6,7 @@ Gönderilen ve dönen her şey JSON.
 Hatalı isteklerde `success: false` ve `message` dönüyor. Doğrulama hatasında
 ayrıca `errors` dizisi var.
 
-Görev ve rapor uçları oturum istiyor. Giriş yapınca `gorev.sid` çerezi geliyor,
+Görev ve rapor uçları oturum istiyor. Giriş yapınca `taskflow.sid` çerezi geliyor,
 sonraki isteklerde bu çerez gönderilmeli. Oturum yoksa `401`.
 
 ## Sağlık
@@ -19,7 +19,7 @@ GET /api/health
 {
   "success": true,
   "status": "ok",
-  "name": "gorev-api",
+  "name": "TaskFlow",
   "version": "1.0.0",
   "uptime": 21.78,
   "timestamp": "2026-10-19T08:21:39.222Z"
@@ -65,7 +65,7 @@ POST /api/auth/login
 { "username": "samil", "password": "123456" }
 ```
 
-Cevap `200` ve `Set-Cookie: gorev.sid=...`:
+Cevap `200` ve `Set-Cookie: taskflow.sid=...`:
 
 ```json
 {
@@ -160,8 +160,9 @@ GET /api/tasks?status=todo&priority=high&sort=-createdAt&page=1&limit=10
 POST /api/tasks
 ```
 
-`title` ve `assignee` zorunlu. Diğerleri opsiyonel; `status` boşsa `todo`,
-`priority` boşsa `medium`, `project` boşsa `genel` oluyor.
+`title` ve `assignee` zorunlu. Diğerleri opsiyonel; alan hiç gönderilmezse
+`status` `todo`, `priority` `medium`, `project` `genel` oluyor. `status` ve
+`priority` için `null` kabul edilmiyor.
 
 ```json
 {
@@ -233,7 +234,8 @@ PATCH /api/tasks/1
 
 İkisi de gönderilen alanları güncelliyor. `PUT` genelde tam, `PATCH` kısmi
 güncelleme için kullanılır; burada aynı davranıyorlar. `id` ve `createdAt`
-korunuyor, `updatedAt` kendiliğinden yenileniyor.
+korunuyor, `updatedAt` kendiliğinden yenileniyor. `status` ve `priority` için
+`null` kabul edilmiyor; `project` boş gönderilirse `genel` oluyor.
 
 ```json
 { "status": "completed" }
@@ -315,6 +317,6 @@ GET /api/reports/summary
 
 ## Denemek için
 
-Postman koleksiyonu: `postman/gorev-api.postman_collection.json`. Önce
+Postman koleksiyonu: `postman/taskflow.postman_collection.json`. Önce
 `0. Giriş` klasöründeki `Giriş Yap` isteğini çalıştır; çerez sonraki isteklerde
 otomatik gidiyor.

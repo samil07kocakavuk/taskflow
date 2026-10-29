@@ -1,7 +1,8 @@
-# görev-api
+# TaskFlow
 
-Kendi işlerimi takip etmek için yazdığım küçük bir görev API'si. Node.js ve Express
-kullandım, verileri JSON dosyasında tutuyorum. Veritabanı kurmak istemedim.
+TaskFlow, kendi günlük işlerimi ve okul projelerimi takip ettiğim küçük bir görev
+API'si. Node.js ve Express kullandım, verileri JSON dosyasında tutuyorum.
+Veritabanı kurmak istemedim.
 
 Giriş için session + çerez kullanıyorum. Görev ve rapor uçlarına erişmek için önce
 giriş yapmak gerekiyor.
@@ -10,16 +11,20 @@ giriş yapmak gerekiyor.
 
 - Kayıt, giriş, çıkış ve "ben kimim" uçları (session tabanlı)
 - Görev ekleme, listeleme, detay, güncelleme (`PUT` ve `PATCH`), silme
-- Her isteği konsola ve `logs/access.log` dosyasına yazan logger
+- Bozuk JSON dahil her isteği konsola ve `logs/access.log` dosyasına yazan logger
 - Alan doğrulama: `title` ve `assignee` zorunlu, `priority` ve `status` belli değerlerden biri
 - Durum, öncelik, kişi ve projeye göre filtreleme
 - Başlık/açıklamada arama, sıralama, sayfalama
 - Tamamlanan / bekleyen / genel özet için üç rapor ucu
-- `npm test` ile 25 otomatik test (giriş, CRUD, doğrulama, hata, eşzamanlı yazma)
+- `npm test` ile 27 otomatik test (giriş, CRUD, doğrulama, hata, loglama, eşzamanlı yazma)
 
 ## Kurulum
 
+Node.js 18.8 veya üzeri gerekiyor.
+
 ```bash
+git clone https://github.com/samil07kocakavuk/taskflow.git
+cd taskflow
 npm install
 ```
 
@@ -59,7 +64,7 @@ curl -X POST http://localhost:3000/api/auth/login \
   -c cookie.txt
 ```
 
-Dönen `gorev.sid` çerezini sonraki isteklerde göndermen gerekiyor:
+Dönen `taskflow.sid` çerezini sonraki isteklerde göndermen gerekiyor:
 
 ```bash
 curl http://localhost:3000/api/tasks -b cookie.txt
@@ -126,6 +131,7 @@ data/tasks.json       gorevler
 data/users.json       kullanicilar (hashli sifre)
 docs/                 tanitim, veri modeli, api dokumani
 postman/              postman koleksiyonu
+screenshots/          Postman ekran goruntuleri
 src/config            ayarlar
 src/controllers       istek/cevap
 src/middleware        logger, validation, oturum kontrolu, hata yakalama
@@ -160,11 +166,25 @@ Testler geçici dosyalarla çalışıyor, `data/` içindeki verilere dokunmuyor.
 
 ## Postman
 
-`postman/gorev-api.postman_collection.json` dosyasını Postman'e import et.
+`postman/taskflow.postman_collection.json` dosyasını Postman'e import et.
 `baseUrl` değişkeni `http://localhost:3000` geliyor.
 
 **Önce `0. Giriş` klasöründeki `Giriş Yap` isteğini çalıştır.** Postman çerezi
 kendisi saklıyor, sonraki istekler oturumlu gidiyor.
+
+## Ekran Görüntüleri
+
+Postman'de ekleme, listeleme, detay, güncelleme ve silme isteklerinin kanıtları:
+
+![Ekleme](screenshots/1-ekle.png)
+
+![Listeleme](screenshots/2-listele.png)
+
+![Detay](screenshots/3-detay.png)
+
+![Güncelleme](screenshots/4-guncelle.png)
+
+![Silme](screenshots/5-sil.png)
 
 ## Notlar
 
@@ -175,4 +195,4 @@ kendisi saklıyor, sonraki istekler oturumlu gidiyor.
 
 Dokümanlar: [tanıtım](docs/Proje-Tanitim-Dokumani.md) ·
 [veri modeli](docs/Veri-Modeli.md) · [API](docs/API-Dokumani.md) ·
-[teslim raporu](docs/Teslim-Raporu.md)
+[test senaryoları](docs/Test-Senaryolari.md) · [teslim raporu](docs/Teslim-Raporu.md)

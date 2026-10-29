@@ -70,7 +70,7 @@ async function login(req, res) {
 
 function logout(req, res) {
   req.session.destroy(() => {
-    res.clearCookie('gorev.sid');
+    res.clearCookie('taskflow.sid');
     res.json({ success: true, message: 'Cikis yapildi.' });
   });
 }

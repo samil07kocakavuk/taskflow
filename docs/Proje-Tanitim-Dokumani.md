@@ -1,8 +1,8 @@
-# Proje Tanıtımı
+# TaskFlow — Proje Tanıtımı
 
 ## Kısaca
 
-`görev-api`, günlük işlerimi ve okul projelerimi tek yerden takip etmek için
+TaskFlow, günlük işlerimi ve okul projelerimi tek yerden takip etmek için
 yazdığım bir REST API. Node.js ve Express kullandım. Verileri JSON dosyasında
 tutuyorum çünkü bu boyuttaki bir proje için veritabanı kurmak istemedim.
 
@@ -57,7 +57,7 @@ veriyor, controller service'i çağırıyor, service de JSON dosyasıyla konuşu
 Middleware'ler ayrı duruyor. Hata yakalama tek yerde: controller içinde
 try/catch yazmıyorum, `asyncHandler` hatayı merkezi error handler'a taşıyor.
 
-`npm test` ile 25 test var. Testler geçici dosyalarla çalışıyor, `data/` içine
+`npm test` ile 27 test var. Testler geçici dosyalarla çalışıyor, `data/` içine
 dokunmuyor.
 
 ## Bilerek yapmadıklarım

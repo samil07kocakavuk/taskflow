@@ -6,8 +6,9 @@ const fs = require('node:fs');
 
 // Testler gecici dosyalarla calissin, data/ degismesin
 const suffix = `${process.pid}-${Date.now()}`;
-process.env.DATA_FILE = path.join(os.tmpdir(), `gorev-test-tasks-${suffix}.json`);
-process.env.USERS_FILE = path.join(os.tmpdir(), `gorev-test-users-${suffix}.json`);
+process.env.DATA_FILE = path.join(os.tmpdir(), `taskflow-test-tasks-${suffix}.json`);
+process.env.USERS_FILE = path.join(os.tmpdir(), `taskflow-test-users-${suffix}.json`);
+process.env.LOG_FILE = path.join(os.tmpdir(), `taskflow-test-log-${suffix}.log`);
 process.env.SESSION_SECRET = 'test-secret';
 
 const app = require('../src/app');
@@ -18,7 +19,7 @@ let cookie = '';
 let taskId;
 
 function removeTempFiles() {
-  [process.env.DATA_FILE, process.env.USERS_FILE].forEach((file) => {
+  [process.env.DATA_FILE, process.env.USERS_FILE, process.env.LOG_FILE].forEach((file) => {
     try {
       fs.unlinkSync(file);
     } catch {
@@ -74,6 +75,22 @@ test('saglik ucu calisiyor', async () => {
   const res = await api('GET', '/api/health');
   assert.equal(res.status, 200);
   assert.equal(res.json.status, 'ok');
+  assert.equal(res.json.name, 'TaskFlow');
+});
+
+test('bozuk JSON istegi de loglaniyor', async () => {
+  const res = await fetch(base + '/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{x}',
+  });
+
+  assert.equal(res.status, 400);
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  const log = fs.readFileSync(process.env.LOG_FILE, 'utf8');
+  assert.match(log, /POST\s+\/api\/auth\/login\s+400/);
 });
 
 test('giris yapmadan gorevler 401', async () => {
@@ -127,7 +144,7 @@ test('giris yapiliyor ve cerez geliyor', async () => {
   });
 
   assert.equal(res.status, 200);
-  assert.match(cookie, /gorev\.sid=/);
+  assert.match(cookie, /taskflow\.sid=/);
 });
 
 test('oturumdaki kullanici donuyor', async () => {
@@ -154,6 +171,7 @@ test('gorev listeleniyor', async () => {
   const res = await api('GET', '/api/tasks');
   assert.equal(res.status, 200);
   assert.equal(res.json.total, 1);
+  assert.equal(res.json.limit, 10);
 });
 
 test('gorev detayi geliyor', async () => {
@@ -173,6 +191,17 @@ test('gorev PATCH ile guncelleniyor', async () => {
   assert.equal(res.status, 200);
   assert.equal(res.json.data.priority, 'low');
   assert.equal(res.json.data.status, 'in-progress');
+});
+
+test('null enum degerleri reddediliyor, bos project genele donuyor', async () => {
+  for (const field of ['status', 'priority', 'project']) {
+    const res = await api('PATCH', `/api/tasks/${taskId}`, { [field]: null });
+    assert.equal(res.status, 400);
+  }
+
+  const project = await api('PATCH', `/api/tasks/${taskId}`, { project: '   ' });
+  assert.equal(project.status, 200);
+  assert.equal(project.json.data.project, 'genel');
 });
 
 test('eksik alan 400 donuyor', async () => {
