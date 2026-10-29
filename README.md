@@ -174,17 +174,19 @@ kendisi saklıyor, sonraki istekler oturumlu gidiyor.
 
 ## Ekran Görüntüleri
 
-Postman'de ekleme, listeleme, detay, güncelleme ve silme isteklerinin kanıtları:
+Postman'de giriş ve temel CRUD isteklerinin kanıtları:
 
-![Ekleme](screenshots/1-ekle.png)
+![Giriş](screenshots/1-giris.png)
 
-![Listeleme](screenshots/2-listele.png)
+![Ekleme](screenshots/2-ekleme.png)
 
-![Detay](screenshots/3-detay.png)
+![Listeleme](screenshots/3-listele.png)
 
-![Güncelleme](screenshots/4-guncelle.png)
+![Detay](screenshots/4-detay.png)
 
-![Silme](screenshots/5-sil.png)
+![Güncelleme](screenshots/5-guncelleme.png)
+
+![Silme](screenshots/6-silme.png)
 
 ## Notlar
 

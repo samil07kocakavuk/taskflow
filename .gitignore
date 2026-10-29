@@ -8,6 +8,10 @@ node_modules/
 logs/
 *.log
 
+# Teslim PDF'leri ve yerel teslim klasoru repoya eklenmez
+*.pdf
+teslim/
+
 # Isletim sistemi dosyalari
 .DS_Store
 Thumbs.db

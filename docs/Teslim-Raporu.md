@@ -140,21 +140,24 @@ Aşağıdaki görüntüler `screenshots/` klasörüne eklendi.
 
 | # | İstek | Beklenen |
 |---|---|---|
-| 1 | Ekleme | 201 Created |
-| 2 | Listeleme | 200 OK |
-| 3 | Detay | 200 OK |
-| 4 | Güncelleme | 200 OK |
-| 5 | Silme | 200 OK |
+| 1 | Giriş | 200 OK |
+| 2 | Ekleme | 201 Created |
+| 3 | Listeleme | 200 OK |
+| 4 | Detay | 200 OK |
+| 5 | Güncelleme | 200 OK |
+| 6 | Silme | 200 OK |
 
-![Ekleme](../screenshots/1-ekle.png)
+![Giriş](../screenshots/1-giris.png)
 
-![Listeleme](../screenshots/2-listele.png)
+![Ekleme](../screenshots/2-ekleme.png)
 
-![Detay](../screenshots/3-detay.png)
+![Listeleme](../screenshots/3-listele.png)
 
-![Güncelleme](../screenshots/4-guncelle.png)
+![Detay](../screenshots/4-detay.png)
 
-![Silme](../screenshots/5-sil.png)
+![Güncelleme](../screenshots/5-guncelleme.png)
+
+![Silme](../screenshots/6-silme.png)
 
 ## 9. Yönerge Gereksinimleri
 
