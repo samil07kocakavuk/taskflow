@@ -9,7 +9,7 @@ giriş yapılması gerekir.
 
 ## Neler var
 
-- Kayıt, giriş, çıkış ve "ben kimim" uçları (session tabanlı)
+- Kayıt, giriş, çıkış ve oturumdaki kullanıcı uçları (session tabanlı)
 - Görev ekleme, listeleme, detay, güncelleme (`PUT` ve `PATCH`), silme
 - Bozuk JSON dahil her isteği konsola ve `logs/access.log` dosyasına yazan logger
 - Alan doğrulama: `title` ve `assignee` zorunlu, `priority` ve `status` belli değerlerden biri
