@@ -1,21 +1,10 @@
-# Bagimliliklar
 node_modules/
-
-# Ortam degiskenleri
 .env
-
-# Log dosyalari
 logs/
 *.log
-
-# Teslim PDF'leri ve yerel teslim klasoru repoya eklenmez
 *.pdf
 teslim/
-
-# Isletim sistemi dosyalari
 .DS_Store
 Thumbs.db
-
-# Editor ayarlari
 .vscode/
 .idea/

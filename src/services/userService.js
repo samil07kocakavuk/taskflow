@@ -24,7 +24,6 @@ function sanitize(user) {
   return { id: user.id, username: user.username, name: user.name };
 }
 
-// Sifreyi scrypt ile hashliyorum, duz metin tutmuyorum
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.scryptSync(password, salt, 64).toString('hex');
@@ -98,7 +97,4 @@ module.exports = {
   create,
   login,
   getById,
-  hashPassword,
-  verifyPassword,
-  sanitize,
 };

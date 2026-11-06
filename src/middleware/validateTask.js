@@ -120,6 +120,4 @@ function validateUpdateTask(req, res, next) {
 module.exports = {
   validateCreateTask,
   validateUpdateTask,
-  ALLOWED_STATUS,
-  ALLOWED_PRIORITY,
 };

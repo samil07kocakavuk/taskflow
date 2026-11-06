@@ -2,7 +2,6 @@ const config = require('../config');
 const { readJson, writeJsonAtomic, withLock } = require('../utils/fileStore');
 const HttpError = require('../utils/HttpError');
 
-// data/tasks.json -> { nextId, tasks: [] }
 const EMPTY = { nextId: 1, tasks: [] };
 
 function normalize(store) {
@@ -24,7 +23,6 @@ async function save(store) {
   await writeJsonAtomic(config.dataFile, store);
 }
 
-// Oku, degistir, yaz. Ayni dosyaya ayni anda iki yazma girmesin.
 function mutate(fn) {
   return withLock(config.dataFile, async () => {
     const store = await load();
@@ -67,7 +65,6 @@ async function list(query = {}) {
     );
   }
 
-  // Sirala
   const sortable = ['id', 'createdAt', 'updatedAt', 'priority', 'title', 'dueDate'];
   let field = 'createdAt';
   let desc = false;
@@ -101,7 +98,6 @@ async function list(query = {}) {
     return 0;
   });
 
-  // Sayfala
   const total = result.length;
   const pageInput = Number.parseInt(query.page, 10);
   const limitInput = Number.parseInt(query.limit, 10);

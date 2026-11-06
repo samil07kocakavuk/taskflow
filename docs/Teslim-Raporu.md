@@ -25,7 +25,6 @@ veri doğrulama, filtreleme/arama/sayfalama ve raporlama bulunuyor.
 | Node.js | Çalışma ortamı |
 | Express.js | Routing ve middleware |
 | express-session | Oturum yönetimi |
-| cors | Frontend erişimi |
 | Node `crypto` | Şifre hashleme (scrypt) |
 | JSON dosyası | Kalıcı veri saklama |
 | Postman | API testleri |

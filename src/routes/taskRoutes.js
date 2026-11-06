@@ -4,7 +4,6 @@ const taskController = require('../controllers/taskController');
 const { validateCreateTask, validateUpdateTask } = require('../middleware/validateTask');
 const asyncHandler = require('../utils/asyncHandler');
 
-// /search ve /assignee, /:id'den once gelmeli; yoksa "search" id sanilir
 router.get('/search', asyncHandler(taskController.searchTasks));
 router.get('/assignee/:assignee', asyncHandler(taskController.getTasksByAssignee));
 

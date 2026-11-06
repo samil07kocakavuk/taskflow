@@ -6,7 +6,6 @@ async function listTasks(req, res) {
 }
 
 async function searchTasks(req, res) {
-  // ayni parametre iki kez gelirse req.query dizi olabiliyor
   const raw =
     typeof req.query.keyword === 'string'
       ? req.query.keyword

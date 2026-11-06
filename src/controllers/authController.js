@@ -51,7 +51,6 @@ async function login(req, res) {
 
   const user = await userService.login(username, password);
 
-  // Oturum sabitlemeyi onlemek icin yeni oturum ac
   return req.session.regenerate((err) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Sunucu hatasi' });

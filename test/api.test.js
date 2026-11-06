@@ -4,7 +4,6 @@ const os = require('node:os');
 const path = require('node:path');
 const fs = require('node:fs');
 
-// Testler gecici dosyalarla calissin, data/ degismesin
 const suffix = `${process.pid}-${Date.now()}`;
 process.env.DATA_FILE = path.join(os.tmpdir(), `taskflow-test-tasks-${suffix}.json`);
 process.env.USERS_FILE = path.join(os.tmpdir(), `taskflow-test-users-${suffix}.json`);
@@ -23,7 +22,6 @@ function removeTempFiles() {
     try {
       fs.unlinkSync(file);
     } catch {
-      // yoksa sorun degil
     }
   });
 }

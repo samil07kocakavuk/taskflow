@@ -2,7 +2,6 @@ const fs = require('fs/promises');
 const path = require('path');
 const config = require('../config');
 
-// Yazma islemleri dosya bazinda siraya girsin diye kuyruk tutuyorum
 const queues = new Map();
 
 function sleep(ms) {
@@ -38,7 +37,6 @@ async function ensureFile(file, initial) {
   await fs.mkdir(path.dirname(file), { recursive: true });
 
   try {
-    // wx: dosya varsa yazmaz, iki istek ayni anda olusturmaya calisirsa biri kazanir
     await fs.writeFile(file, JSON.stringify(initial, null, 2), {
       encoding: 'utf8',
       flag: 'wx',
@@ -58,7 +56,6 @@ async function renameWithRetry(from, to, attempts = 5) {
     } catch (err) {
       lastError = err;
 
-      // Windows'ta dosya kisa sure kilitli kalabiliyor
       const retryable = ['EPERM', 'EACCES', 'EBUSY'].includes(err.code);
       if (!retryable || i === attempts - 1) throw err;
 
@@ -69,7 +66,6 @@ async function renameWithRetry(from, to, attempts = 5) {
   throw lastError;
 }
 
-// Once gecici dosyaya yazip sonra rename ediyorum, yarim dosya okunmasin
 async function writeJsonAtomic(file, data) {
   await fs.mkdir(path.dirname(file), { recursive: true });
 
@@ -98,13 +94,11 @@ async function readJson(file, fallback) {
   try {
     return JSON.parse(raw);
   } catch {
-    // Sessizce bos listeye donmek veri kaybi olur, hata veriyorum
     throw new Error(`Veri dosyasi okunamadi (bozuk JSON): ${file}`);
   }
 }
 
 module.exports = {
-  ensureFile,
   readJson,
   writeJsonAtomic,
   withLock,

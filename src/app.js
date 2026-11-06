@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const session = require('express-session');
 
 const config = require('./config');
@@ -12,7 +11,6 @@ const app = express();
 app.disable('x-powered-by');
 
 app.use(logger);
-app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
@@ -25,7 +23,7 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      maxAge: 1000 * 60 * 60, // 1 saat
+      maxAge: 1000 * 60 * 60,
     },
   })
 );

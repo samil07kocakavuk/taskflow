@@ -33,5 +33,3 @@ process.on('unhandledRejection', (reason) => {
 process.on('uncaughtException', (err) => {
   console.error('Yakalanmayan hata:', err);
 });
-
-module.exports = server;

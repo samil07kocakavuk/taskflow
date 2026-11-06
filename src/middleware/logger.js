@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const config = require('../config');
 
-// 2026-10-18 22:15:03
 function stamp(date) {
   const pad = (n) => String(n).padStart(2, '0');
 
@@ -27,7 +26,6 @@ module.exports = function logger(req, res, next) {
       fs.mkdirSync(path.dirname(config.logFile), { recursive: true });
       fs.appendFile(config.logFile, line + '\n', () => {});
     } catch {
-      // log yazilamazsa istegi bozmayalim
     }
   });
 

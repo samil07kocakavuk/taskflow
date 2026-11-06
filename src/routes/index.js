@@ -19,7 +19,6 @@ router.get('/health', (req, res) => {
 
 router.use('/auth', authRoutes);
 
-// Gorev ve rapor uclari icin giris zorunlu
 router.use('/tasks', requireAuth, taskRoutes);
 router.use('/reports', requireAuth, reportRoutes);
 

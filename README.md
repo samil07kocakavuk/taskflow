@@ -1,26 +1,13 @@
 # TaskFlow
 
-TaskFlow, günlük işleri ve okul projelerini takip etmek için geliştirilmiş küçük
-bir görev API'sidir. Node.js ve Express kullanılmıştır; veriler JSON dosyasında
-tutulmaktadır. Bu boyuttaki proje için veritabanı tercih edilmemiştir.
+TaskFlow, görevlerin oluşturulması, çalışanlara atanması ve durum/öncelik bazında izlenmesi için geliştirilmiş bir REST API'dir. Node.js ve Express.js kullanır; veriler JSON dosyalarında tutulur. Görev ve rapor uçları session tabanlı kimlik doğrulama ile korunur.
 
-Giriş için session + çerez kullanılır. Görev ve rapor uçlarına erişmek için önce
-giriş yapılması gerekir.
+## Gereksinimler
 
-## Neler var
-
-- Kayıt, giriş, çıkış ve oturumdaki kullanıcı uçları (session tabanlı)
-- Görev ekleme, listeleme, detay, güncelleme (`PUT` ve `PATCH`), silme
-- Bozuk JSON dahil her isteği konsola ve `logs/access.log` dosyasına yazan logger
-- Alan doğrulama: `title` ve `assignee` zorunlu, `priority` ve `status` belli değerlerden biri
-- Durum, öncelik, kişi ve projeye göre filtreleme
-- Başlık/açıklamada arama, sıralama, sayfalama
-- Tamamlanan / bekleyen / genel özet için üç rapor ucu
-- `npm test` ile 27 otomatik test (giriş, CRUD, doğrulama, hata, loglama, eşzamanlı yazma)
+- Node.js 18.8 veya üzeri
+- npm
 
 ## Kurulum
-
-Node.js 18.8 veya üzeri gerekiyor.
 
 ```bash
 git clone https://github.com/samil07kocakavuk/taskflow.git
@@ -28,15 +15,12 @@ cd taskflow
 npm install
 ```
 
-Ayarları `.env` dosyasından okumak için örneği kopyalayın:
+Ortam değişkenlerini değiştirmek için `.env.example` dosyasını `.env` olarak kopyalayın:
 
 ```bash
 # PowerShell
 Copy-Item .env.example .env
 ```
-
-`PORT`, `SESSION_SECRET` ve dosya yolları buradan değiştirilebiliyor. `.env`
-git'e eklenmiyor.
 
 ## Çalıştırma
 
@@ -44,19 +28,18 @@ git'e eklenmiyor.
 npm start
 ```
 
-Sunucu `http://localhost:3000` adresinde açılır. Port değiştirmek için:
+Sunucu varsayılan olarak `http://localhost:3000` adresinde çalışır. Farklı port için:
 
 ```bash
 # PowerShell
 $env:PORT=4000; npm start
 ```
 
-Geliştirme sırasında `npm run dev` kullanılabilir; dosya değişince sunucu kendini
-yeniler.
+Geliştirme sırasında `npm run dev` kullanılabilir. Bu komut dosya değişikliklerinde sunucuyu yeniden başlatır ve Node.js 18.11 veya üzeri gerektirir.
 
 ## Giriş
 
-Hazır kullanıcı: **`samil` / `123456`**
+Hazır kullanıcı: `samil` / `123456`
 
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
@@ -65,58 +48,72 @@ curl -X POST http://localhost:3000/api/auth/login \
   -c cookie.txt
 ```
 
-Dönen `taskflow.sid` çerezi sonraki isteklerde gönderilmelidir:
+Dönen `taskflow.sid` çerezi sonraki isteklerde gönderilir:
 
 ```bash
 curl http://localhost:3000/api/tasks -b cookie.txt
 ```
 
-Yeni kullanıcı için `POST /api/auth/register` kullanılıyor. Şifreler `scrypt` ile
-hashlenip `data/users.json` içinde tutuluyor, düz metin yok.
+Yeni kullanıcı `POST /api/auth/register` ile oluşturulur. Şifreler düz metin olarak tutulmaz.
 
 ## Uçlar
 
-| Metot | Yol | Ne yapıyor |
+| Metot | Yol | İşlev |
 |---|---|---|
-| GET | `/api/health` | Sunucu ayakta mı (giriş gerekmez) |
-| POST | `/api/auth/register` | Kayıt |
+| GET | `/api/health` | Sunucu durumu (giriş gerekmez) |
+| POST | `/api/auth/register` | Kullanıcı kaydı |
 | POST | `/api/auth/login` | Giriş |
 | POST | `/api/auth/logout` | Çıkış |
 | GET | `/api/auth/me` | Oturumdaki kullanıcı |
 | GET | `/api/tasks` | Görevleri listeler |
-| POST | `/api/tasks` | Yeni görev ekler |
-| GET | `/api/tasks/:id` | Tek görev getirir |
+| POST | `/api/tasks` | Görev ekler |
+| GET | `/api/tasks/:id` | Görev detayı |
 | PUT | `/api/tasks/:id` | Görevi günceller |
 | PATCH | `/api/tasks/:id` | Görevi kısmi günceller |
 | DELETE | `/api/tasks/:id` | Görevi siler |
-| GET | `/api/tasks/search?keyword=` | Başlık/açıklamada arar |
-| GET | `/api/tasks/assignee/:assignee` | Kişiye atanan görevler |
-| GET | `/api/reports/completed` | Tamamlananlar |
-| GET | `/api/reports/pending` | Bekleyenler |
+| GET | `/api/tasks/search?keyword=` | Başlık ve açıklamada arar |
+| GET | `/api/tasks/assignee/:assignee` | Kişiye atanan görevleri listeler |
+| GET | `/api/reports/completed` | Tamamlanan görevler |
+| GET | `/api/reports/pending` | Bekleyen görevler |
 | GET | `/api/reports/summary` | Genel özet |
 
-Giriş gerektiren uçlar oturum yoksa `401` döner.
+Görev ve rapor uçları oturum yoksa `401` döner.
 
-Listeleme şu parametreleri alıyor: `status`, `priority`, `assignee`, `project`,
-`keyword`, `sort`, `page`, `limit`. Örnek:
+## Listeleme Parametreleri
 
+`GET /api/tasks` şu parametreleri kabul eder:
+
+| Parametre | Örnek | Açıklama |
+|---|---|---|
+| `status` | `completed` | `todo`, `in-progress`, `completed` |
+| `priority` | `high` | `low`, `medium`, `high` |
+| `assignee` | `samil` | Atanan kişi |
+| `project` | `bitirme` | Proje adı |
+| `keyword` | `sunum` | Başlık ve açıklamada arama |
+| `sort` | `-createdAt` | `createdAt`, `updatedAt`, `priority`, `title`, `dueDate`, `id` |
+| `page` | `1` | Sayfa numarası |
+| `limit` | `10` | Sayfa başına kayıt (en fazla 100) |
+
+Örnek:
+
+```text
+GET /api/tasks?status=todo&priority=high&sort=-createdAt&page=1&limit=10
 ```
-GET /api/tasks?status=todo&sort=-createdAt&page=1&limit=10
-```
 
-`sort` için `createdAt`, `updatedAt`, `priority`, `title`, `dueDate`, `id`
-kullanılabilir. Azalan sıralama için başına `-` konur (`sort=-createdAt`).
+Azalan sıralama için alan adının başına `-` eklenir.
 
-## Örnek
+## Örnek İstekler
 
-Giriş yaptıktan sonra:
+Görev ekleme:
 
 ```bash
 curl -X POST http://localhost:3000/api/tasks \
   -H "Content-Type: application/json" \
   -b cookie.txt \
-  -d '{"title":"Sunum slaytlarini hazirla","priority":"high","assignee":"samil"}'
+  -d '{"title":"Sunum slaytlarını hazırla","priority":"high","assignee":"samil"}'
 ```
+
+Görev güncelleme:
 
 ```bash
 curl -X PATCH http://localhost:3000/api/tasks/1 \
@@ -125,38 +122,28 @@ curl -X PATCH http://localhost:3000/api/tasks/1 \
   -d '{"status":"completed"}'
 ```
 
-## Klasörler
+## Proje Yapısı
 
-```
-data/tasks.json       gorevler
-data/users.json       kullanicilar (hashli sifre)
-docs/                 tanitim, veri modeli, api dokumani
-postman/              postman koleksiyonu
-screenshots/          Postman ekran goruntuleri
-src/config            ayarlar
-src/controllers       istek/cevap
-src/middleware        logger, validation, oturum kontrolu, hata yakalama
-src/routes            rotalar
-src/services          is mantigi
-src/utils             yardimci dosyalar
-test/                 api testleri
-```
-
-## Veri
-
-Görevler `data/tasks.json` içinde tutulur:
-
-```json
-{
-  "nextId": 9,
-  "tasks": [ { "id": 1, "title": "...", "...": "..." } ]
-}
+```text
+src/
+  config/        ayarlar
+  controllers/   istek ve yanıt işlemleri
+  middleware/    logger, doğrulama, oturum ve hata yönetimi
+  routes/        API rotaları
+  services/      veri işlemleri
+  utils/         yardımcı dosyalar
+  app.js
+  server.js
+test/            API testleri
+data/            JSON veri dosyaları
+docs/            proje dokümanları
+postman/         Postman koleksiyonu
+screenshots/     Postman ekran görüntüleri
 ```
 
-`nextId` sayesinde silinen bir görevin numarası yeni göreve tekrar verilmiyor.
-Dosyaya yazarken önce geçici dosyaya yazılır, sonra asıl dosyanın üzerine
-taşınır; böylece aynı anda gelen isteklerde yarım dosya okunmaz. Yazma işlemleri
-sıraya alınır.
+## Veri Saklama
+
+Görevler `data/tasks.json`, kullanıcılar `data/users.json` içinde tutulur. Dosyalar yoksa ilk çalıştırmada oluşturulur. Yazma işlemleri sıraya alınır; yarım dosya okunmasını önlemek için geçici dosya kullanılır.
 
 ## Test
 
@@ -168,35 +155,30 @@ Testler geçici dosyalarla çalışır ve `data/` içindeki verilere dokunmaz.
 
 ## Postman
 
-`postman/taskflow.postman_collection.json` dosyası Postman'e import edilmelidir.
-`baseUrl` değişkeni `http://localhost:3000` olarak gelir.
+`postman/taskflow.postman_collection.json` dosyasını Postman'e import edin. İsteklerden önce `0. Giriş` klasöründeki `Giriş Yap` isteğini çalıştırın; Postman çerezi sonraki isteklerde kullanır.
 
-**Önce `0. Giriş` klasöründeki `Giriş Yap` isteği çalıştırılmalıdır.** Postman
-çerezi kendisi saklar; sonraki istekler oturumlu gider.
+`baseUrl` değişkeni varsayılan olarak `http://localhost:3000` değerini alır.
 
 ## Ekran Görüntüleri
 
-Postman'de giriş ve temel CRUD isteklerinin kanıtları:
-
 ![Giriş](screenshots/1-giris.png)
 
-![Ekleme](screenshots/2-ekleme.png)
+![Görev ekleme](screenshots/2-ekleme.png)
 
-![Listeleme](screenshots/3-listele.png)
+![Görev listeleme](screenshots/3-listele.png)
 
-![Detay](screenshots/4-detay.png)
-
-![Güncelleme](screenshots/5-guncelleme.png)
-
-![Silme](screenshots/6-silme.png)
+Diğer ekran görüntüleri `screenshots/` klasöründe yer alır.
 
 ## Notlar
 
-- Session'lar sunucu belleğinde; sunucu yeniden başlarsa tekrar giriş yapmak gerekir.
-- `SESSION_SECRET` ortam değişkeniyle değiştirilebilir.
-- Aynı anda birden fazla sunucu aynı dosyaya yazarsa kuyruk işe yaramaz. Proje
-  tek process için tasarlanmıştır.
+- Session'lar sunucu belleğinde tutulur; sunucu yeniden başlarsa tekrar giriş yapılması gerekir.
+- `PORT`, `SESSION_SECRET` ve dosya yolları `.env` üzerinden değiştirilebilir.
+- Proje tek sunucu süreci için tasarlanmıştır.
 
-Dokümanlar: [tanıtım](docs/Proje-Tanitim-Dokumani.md) ·
-[veri modeli](docs/Veri-Modeli.md) · [API](docs/API-Dokumani.md) ·
-[test senaryoları](docs/Test-Senaryolari.md) · [teslim raporu](docs/Teslim-Raporu.md)
+## Dokümanlar
+
+- [Proje tanıtımı](docs/Proje-Tanitim-Dokumani.md)
+- [Veri modeli](docs/Veri-Modeli.md)
+- [API dokümanı](docs/API-Dokumani.md)
+- [Test senaryoları](docs/Test-Senaryolari.md)
+- [Teslim raporu](docs/Teslim-Raporu.md)
