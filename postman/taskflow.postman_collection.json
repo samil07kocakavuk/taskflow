@@ -6,8 +6,16 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
-    { "key": "taskId", "value": "1", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "1",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -24,20 +32,50 @@
                   "pm.variables.set('newUser', 'deneme' + Date.now());"
                 ]
               }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('kullanici donuyor', () => {",
+                  "  pm.expect(body.success).to.eql(true);",
+                  "  pm.expect(body.data.username).to.eql(pm.variables.get('newUser'));",
+                  "});",
+                  "pm.test('sifre hash\\'i sizmiyor', () => pm.expect(JSON.stringify(body)).to.not.include('passwordHash'));"
+                ]
+              }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"{{newUser}}\",\n  \"password\": \"123456\",\n  \"name\": \"Deneme\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -45,18 +83,50 @@
           "name": "Giriş Yap",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"samil\",\n  \"password\": \"123456\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('oturum cerezi verildi', () => pm.expect(pm.cookies.has('taskflow.sid')).to.eql(true));",
+                  "const body = pm.response.json();",
+                  "pm.test('kullanici samil', () => {",
+                  "  pm.expect(body.success).to.eql(true);",
+                  "  pm.expect(body.data.username).to.eql('samil');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Ben Kimim",
@@ -65,10 +135,28 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('oturumdaki kullanici', () => pm.expect(pm.response.json().data.username).to.eql('samil'));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -80,8 +168,33 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('surum bilgisi var', () => {",
+                  "  pm.expect(body.name).to.eql('TaskFlow');",
+                  "  pm.expect(body.version).to.be.a('string');",
+                  "});",
+                  "pm.test('16 uç listeleniyor', () => pm.expect(body.endpoints).to.be.an('array').that.has.lengthOf(16));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Sağlık Kontrolü",
@@ -90,10 +203,32 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/health",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "health"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status ok', () => {",
+                  "  pm.expect(body.status).to.eql('ok');",
+                  "  pm.expect(body.name).to.eql('TaskFlow');",
+                  "  pm.expect(body.uptime).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -107,10 +242,34 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('liste ve sayfalama alanlari', () => {",
+                  "  pm.expect(body.success).to.eql(true);",
+                  "  pm.expect(body.data).to.be.an('array');",
+                  "  pm.expect(body.total).to.be.a('number');",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "  pm.expect(body.limit).to.eql(10);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Ekleme",
@@ -120,8 +279,17 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('gorev olustu', () => {",
+                  "  pm.expect(body.success).to.eql(true);",
+                  "  pm.expect(body.data.id).to.be.a('number');",
+                  "  pm.expect(body.data.title).to.eql('Sunum slaytlarini hazirla');",
+                  "  pm.expect(body.data.status).to.eql('todo');",
+                  "  pm.expect(body.data.createdAt).to.be.a('string');",
+                  "});",
                   "if (pm.response.code === 201) {",
-                  "    pm.collectionVariables.set('taskId', pm.response.json().data.id);",
+                  "  pm.collectionVariables.set('taskId', body.data.id);",
                   "}"
                 ]
               }
@@ -129,16 +297,30 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"Sunum slaytlarini hazirla\",\n  \"description\": \"Ilk uc slayt bitsin.\",\n  \"priority\": \"high\",\n  \"assignee\": \"samil\",\n  \"project\": \"bitirme\",\n  \"dueDate\": \"2026-10-27\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
             }
           }
         },
@@ -149,27 +331,79 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "{{taskId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('eklenen gorev donuyor', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(String(body.data.id)).to.eql(String(pm.collectionVariables.get('taskId')));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Güncelleme",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"completed\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "{{taskId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status completed oldu', () => {",
+                  "  pm.expect(body.data.status).to.eql('completed');",
+                  "  pm.expect(body.data.updatedAt >= body.data.createdAt).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Silme",
@@ -178,10 +412,32 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "{{taskId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('silinen gorev donuyor', () => {",
+                  "  pm.expect(body.message).to.be.a('string');",
+                  "  pm.expect(String(body.data.id)).to.eql(String(pm.collectionVariables.get('taskId')));",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -195,11 +451,37 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks?status=completed",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"],
-              "query": [{ "key": "status", "value": "completed" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('hepsi completed', () => {",
+                  "  pm.expect(body.data).to.be.an('array');",
+                  "  body.data.forEach((t) => pm.expect(t.status).to.eql('completed'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Önceliğe göre",
@@ -208,11 +490,37 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks?priority=high",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"],
-              "query": [{ "key": "priority", "value": "high" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "high"
+                }
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('hepsi high', () => {",
+                  "  pm.expect(body.data).to.be.an('array');",
+                  "  body.data.forEach((t) => pm.expect(t.priority).to.eql('high'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Arama",
@@ -221,11 +529,38 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks/search?keyword=sunum",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "search"],
-              "query": [{ "key": "keyword", "value": "sunum" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "sunum"
+                }
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('keyword eslesiyor', () => {",
+                  "  pm.expect(body.keyword).to.eql('sunum');",
+                  "  body.data.forEach((t) => pm.expect((t.title + ' ' + (t.description || '')).toLowerCase()).to.include('sunum'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Kişiye göre",
@@ -234,10 +569,33 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks/assignee/samil",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "assignee", "samil"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "assignee",
+                "samil"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('hepsi samil', () => {",
+                  "  pm.expect(body.assignee).to.eql('samil');",
+                  "  body.data.forEach((t) => pm.expect(t.assignee.toLowerCase()).to.eql('samil'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Sayfalama",
@@ -246,14 +604,42 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks?page=1&limit=3",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "3" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('limit 3 uygulandi', () => {",
+                  "  pm.expect(body.limit).to.eql(3);",
+                  "  pm.expect(body.data.length).to.be.at.most(3);",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Sıralama",
@@ -262,11 +648,38 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks?sort=-createdAt",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"],
-              "query": [{ "key": "sort", "value": "-createdAt" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "-createdAt"
+                }
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('createdAt azalan', () => {",
+                  "  const dates = body.data.map((t) => new Date(t.createdAt).getTime());",
+                  "  const sorted = [...dates].sort((a, b) => b - a);",
+                  "  pm.expect(dates).to.eql(sorted);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -280,10 +693,33 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reports/completed",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reports", "completed"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "completed"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('count ve liste tutarli', () => {",
+                  "  pm.expect(body.report).to.eql('completed');",
+                  "  pm.expect(body.count).to.eql(body.tasks.length);",
+                  "  body.tasks.forEach((t) => pm.expect(t.status).to.eql('completed'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Bekleyen",
@@ -292,10 +728,33 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reports/pending",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reports", "pending"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "pending"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('completed olmayanlar', () => {",
+                  "  pm.expect(body.report).to.eql('pending');",
+                  "  pm.expect(body.count).to.eql(body.tasks.length);",
+                  "  body.tasks.forEach((t) => pm.expect(t.status).to.not.eql('completed'));",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Özet",
@@ -304,10 +763,33 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reports/summary",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reports", "summary"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "summary"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json().data;",
+                  "pm.test('toplamlar tutarli', () => {",
+                  "  pm.expect(body.total).to.eql(body.completed + body.pending);",
+                  "  pm.expect(body.byStatus.todo + body.byStatus['in-progress'] + body.byStatus.completed).to.eql(body.total);",
+                  "  pm.expect(body.byPriority.high + body.byPriority.medium + body.byPriority.low).to.eql(body.total);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -318,35 +800,95 @@
           "name": "400 - title yok",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"assignee\": \"samil\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400 Bad Request', () => pm.response.to.have.status(400));",
+                  "const body = pm.response.json();",
+                  "pm.test('title hatasi aciklanmis', () => {",
+                  "  pm.expect(body.success).to.eql(false);",
+                  "  pm.expect(body.errors.join(' ')).to.include('title zorunlu');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "400 - geçersiz priority",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"deneme\",\n  \"assignee\": \"samil\",\n  \"priority\": \"urgent\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400 Bad Request', () => pm.response.to.have.status(400));",
+                  "pm.test('priority hatasi aciklanmis', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.success).to.eql(false);",
+                  "  pm.expect(body.errors.join(' ')).to.include('priority');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "404 - olmayan görev",
@@ -355,10 +897,28 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/tasks/9999",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "tasks", "9999"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "9999"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', () => pm.response.to.have.status(404));",
+                  "pm.test('success false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "404 - olmayan endpoint",
@@ -367,10 +927,27 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/yok",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "yok"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "yok"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', () => pm.response.to.have.status(404));",
+                  "pm.test('success false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -384,8 +961,55 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/auth/logout",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "logout"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('cikis yapildi', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Çıkış Sonrası Kontrol",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));",
+                  "pm.test('oturum kapandi', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
             }
           }
         }

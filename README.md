@@ -159,13 +159,19 @@ Testler geçici dosyalarla çalışır ve `data/` içindeki verilere dokunmaz.
 
 `baseUrl` değişkeni varsayılan olarak `http://localhost:3000` değerini alır.
 
+Koleksiyondaki 25 isteğin her birinde `pm.test` doğrulaması vardır. Collection Runner ile çalıştırıldığında 25 istek ve 53 doğrulama hatasız geçer. Terminalden:
+
+```bash
+npx newman run postman/taskflow.postman_collection.json
+```
+
 ## Ekran Görüntüleri
 
-![Giriş](screenshots/1-giris.png)
+![Giriş](screenshots/01-giris.png)
 
-![Görev ekleme](screenshots/2-ekleme.png)
+![Görev ekleme](screenshots/02-ekleme.png)
 
-![Görev listeleme](screenshots/3-listele.png)
+![Görev listeleme](screenshots/03-listele.png)
 
 Diğer ekran görüntüleri `screenshots/` klasöründe yer alır.
 

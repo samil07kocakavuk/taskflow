@@ -60,6 +60,14 @@ tanımlar. Başlangıç adresi: `http://localhost:3000`.
 4. `5. Hatalı İstekler` ve rapor isteklerini kontrol et.
 5. Sonuçları `screenshots/` altındaki görüntülerle birlikte değerlendir.
 
+Her istekte `pm.test` doğrulaması bulunuyor. Koleksiyonun tamamı Collection
+Runner ile çalıştırıldığında **25 istek, 53 doğrulama, 0 hata** veriyor.
+Terminalden çalıştırmak için:
+
+```bash
+npx newman run postman/taskflow.postman_collection.json
+```
+
 ## Otomatik testler
 
 `npm test` komutu aynı davranışların büyük bölümünü geçici dosyalarla doğrular.
