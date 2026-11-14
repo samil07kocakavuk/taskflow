@@ -2,7 +2,7 @@
 
 **Öğrenci:** İsmail Şamil Kocakavuk
 **Ders:** Backend Geliştirme
-**Teslim Tarihi:** 19.10.2026
+**Teslim Tarihi:** 14.11.2026
 **GitHub:** https://github.com/samil07kocakavuk/taskflow
 
 ---
@@ -130,8 +130,12 @@ eşzamanlı yazma.
 
 Koleksiyon: `postman/taskflow.postman_collection.json`
 
-Sonuç: **24 istek, 0 hata.** Koleksiyon sırasıyla kayıt, giriş, görev CRUD,
-filtre/arama/sayfalama, raporlar, hatalı istekler ve çıkış adımlarını içeriyor.
+Koleksiyondaki 25 isteğin tamamında `pm.test` doğrulaması var (durum kodu,
+gövde alanları, filtre/sıralama tutarlılığı, hata mesajları).
+
+Sonuç (Collection Runner / `newman run`): **25 istek, 53 doğrulama, 0 hata.**
+Koleksiyon sırasıyla kayıt, giriş, görev CRUD, filtre/arama/sayfalama, raporlar,
+hatalı istekler ve çıkış adımlarını içeriyor.
 
 ### Ekran Görüntüleri
 
@@ -145,18 +149,30 @@ Aşağıdaki görüntüler `screenshots/` klasörüne eklendi.
 | 4 | Detay | 200 OK |
 | 5 | Güncelleme | 200 OK |
 | 6 | Silme | 200 OK |
+| 7 | Collection Runner | 25 istek, 53 doğrulama, 0 hata |
+| 8 | Doğrulama hatası | 400 Bad Request |
+| 9 | Çıkış | 200 OK |
+| 10 | Olmayan endpoint | 404 Not Found |
 
-![Giriş](../screenshots/1-giris.png)
+![Giriş](../screenshots/01-giris.png)
 
-![Ekleme](../screenshots/2-ekleme.png)
+![Ekleme](../screenshots/02-ekleme.png)
 
-![Listeleme](../screenshots/3-listele.png)
+![Listeleme](../screenshots/03-listele.png)
 
-![Detay](../screenshots/4-detay.png)
+![Detay](../screenshots/04-detay.png)
 
-![Güncelleme](../screenshots/5-guncelleme.png)
+![Güncelleme](../screenshots/05-guncelleme.png)
 
-![Silme](../screenshots/6-silme.png)
+![Silme](../screenshots/06-silme.png)
+
+![Collection Runner](../screenshots/07-runner.png)
+
+![Doğrulama hatası](../screenshots/08-dogrulama.png)
+
+![Çıkış](../screenshots/09-cikis.png)
+
+![Olmayan endpoint](../screenshots/10-notfound.png)
 
 ## 9. Yönerge Gereksinimleri
 
